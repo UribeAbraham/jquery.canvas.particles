@@ -1,5 +1,5 @@
 $.fn.particles=function(method){
-  var pi=2 * Math.PI;
+        var pi=2 * Math.PI;
 	var defaults={
 		particles:5,
 		stop:false,

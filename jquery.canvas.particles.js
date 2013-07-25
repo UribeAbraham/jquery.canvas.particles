@@ -9,7 +9,7 @@ $.fn.particles=function(method){
 			x:1,
 			y:1,
 			xrand:true,
-			yrand:false,
+			yrand:true,
 			rand:true
 		},
 		image:false,
@@ -28,7 +28,7 @@ $.fn.particles=function(method){
 			speed:1,
 			random:false,
 			min:.2
-		},
+		},	
 		opacity:{
 			opacity:1,
 			random:false,
@@ -43,9 +43,10 @@ $.fn.particles=function(method){
 		},
 		color:{
 			color:{r:255,g:255,b:255},
-			random:true,
-			mincolor:{r:0,g:0,b:0}
-		}
+			random:false,
+			min:{r:0,g:0,b:0}
+		},
+		layout:"before"
 	};
 	var requestAnimFrame=(function(callback){
 		return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||
@@ -69,7 +70,12 @@ $.fn.particles=function(method){
 				o.canvas.cw=el.width();
 				o.canvas.ch=el.height();
 				var canvas=$("<canvas class='particles' width='"+o.canvas.cw+"' height='"+o.canvas.ch+"'></canvas>");
-				el.append(canvas);
+				if(o.layout=="before"){
+					el.append(canvas);
+				}
+				else if(o.layout=="after"){
+					el.prepend(canvas);
+				}
 				var ctx = canvas.get(0).getContext("2d");
 				o.canvas.ctx=ctx;
 				o.canvas.co=canvas;
@@ -78,7 +84,7 @@ $.fn.particles=function(method){
 					var rand=Math.random();
 					el.particles("addParticle",{
 						position:{
-							x:o.position.random?parseInt(Math.random()*o.canvas.defaults.canvas.cw):o.position.x,
+							x:o.position.random?parseInt(Math.random()*o.canvas.cw):o.position.x,
 							y:o.position.random?parseInt(Math.random()*o.canvas.ch):o.position.y
 						},
 						radius:{
@@ -95,9 +101,9 @@ $.fn.particles=function(method){
 						},
 						color:{
 							color:o.color.random?{
-								r:parseInt(rand*(o.color.color.r-o.color.mincolor.r)+o.color.mincolor.r),
-								g:parseInt(rand*(o.color.color.g-o.color.mincolor.g)+o.color.mincolor.g),
-								b:parseInt(rand*(o.color.color.b-o.color.mincolor.b)+o.color.mincolor.b)
+								r:parseInt(rand*(o.color.color.r-o.color.min.r)+o.color.min.r),
+								g:parseInt(rand*(o.color.color.g-o.color.min.g)+o.color.min.g),
+								b:parseInt(rand*(o.color.color.b-o.color.min.b)+o.color.min.b)
 							}:o.color.color
 						}
 					});
@@ -106,12 +112,8 @@ $.fn.particles=function(method){
 			});
 		},
 		addParticle:function(p){
-			return this.each(function(){
+			return this.each(function(){			
 				var defaults=this.parts;
-				var randomdir=function(){
-					o.dir.x=(o.dir.xrand)?(parseInt(Math.random())==0)?Math.random():(Math.random()*-1):o.dir.x;
-					o.dir.y=(o.dir.yrand)?(parseInt(Math.random())==0)?Math.random():(Math.random()*-1):o.dir.y;
-				};
 				var o={
 					color:$.extend(true,{},defaults.color,p.color||{}),
 					duration:$.extend(true,{},defaults.duration,p.duration||{}),
@@ -124,11 +126,16 @@ $.fn.particles=function(method){
 					dir:$.extend(true,{},defaults.dir,p.dir||{}),
 					alpha:0
 				};
+				var randomdir=function(){
+					o.dir.x=(o.dir.xrand)?(parseInt(Math.random()*2)==0)?Math.random()+.1:(Math.random()*-1)-.1:o.dir.x;
+					o.dir.y=(o.dir.yrand)?(parseInt(Math.random()*2)==0)?Math.random()+.1:(Math.random()*-1)-.1:o.dir.y;
+				};
 				if(o.image&&!o.image.src){
 					var src=o.image;
 					o.image=new Image();
 					o.image.src=src;
 				}
+				o.position=p.position&&p.position.random?{x:parseInt(Math.random()*defaults.canvas.cw),y:parseInt(Math.random()*defaults.canvas.ch),random:true}:o.position;
 				o.duration.duration=parseInt(o.duration.duration/frames);
 				o.duration.firststep=parseInt(o.duration.firststep/frames);
 				o.duration.min=parseInt(o.duration.min/frames);
@@ -139,7 +146,7 @@ $.fn.particles=function(method){
 					min:parseInt(defaults.duration.min/frames),
 					duration:parseInt(defaults.duration.duration/frames),
 					radius:defaults.radius.radius-defaults.radius.min,
-					speed:defaults.speed-defaults.speed.min,
+					speed:defaults.speed.speed-defaults.speed.min,
 					opacity:defaults.opacity.opacity-defaults.opacity.min
 				};
 				e.max=e.duration-e.min;
@@ -151,10 +158,16 @@ $.fn.particles=function(method){
 						}
 						else if(o.end=="change"){
 							randomdir();
+							var rand=Math.random();
 							o.duration.duration=o.duration.random?parseInt(Math.random()*e.max)+e.min:e.duration;
 							o.radius.radius=o.radius.random?(Math.random()*e.radius)+defaults.radius.min:defaults.radius.radius;
 							o.speed.speed=o.speed.random?(Math.random()*e.speed)+defaults.speed.min:defaults.speed.speed;
 							o.opacity.opacity=o.opacity.random?(Math.random()*e.opacity)+defaults.opacity.min:defaults.opacity.opacity;
+							o.color.color=o.color.random?{
+								r:parseInt(rand*(defaults.color.color.r-defaults.color.min.r)+defaults.color.min.r),
+								g:parseInt(rand*(defaults.color.color.g-defaults.color.min.g)+defaults.color.min.g),
+								b:parseInt(rand*(defaults.color.color.b-defaults.color.min.b)+defaults.color.min.b)
+							}:o.color.color;
 							e.half=o.duration.duration/2;
 						}
 					}

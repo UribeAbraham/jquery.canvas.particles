@@ -1,197 +1,216 @@
 $.fn.particles=function(method){
-        var pi=2 * Math.PI;
+	var pi=2*Math.PI;
+	var frames=1000/60;
 	var defaults={
-		particles:5,
+		amount:10,
 		stop:false,
-		randomradius:false,
-		radius:5,
-		minradius:3,
-		randomduration:false,
-		duration:10000,//10s
-		minduration:1000,//1s
-		randomspeed:false,
-		speed:1,
-		minspeed:.2,
-		randomopacity:false,
-		opacity:1,
-		minopacity:0,
-		animopacity:true,
-		decayopacity:true,
-		x:0,
-		y:0,
-		randompoint:false,
-		randomcolor:true,
-		color:{r:255,g:255,b:255},
-		mincolor:{r:0,g:0,b:0},
-		end:"change",//change,remove
-		randomdir:{x:true,y:true},		
+		end:"change",
+		dir:{
+			x:1,
+			y:1,
+			xrand:true,
+			yrand:false,
+			rand:true
+		},
 		image:false,
-		firststep:-20
+		radius:{
+			radius:5,
+			random:false,
+			min:3
+		},
+		duration:{
+			duration:10000,
+			random:false,
+			min:1000,
+			firststep:-2000
+		},
+		speed:{
+			speed:1,
+			random:false,
+			min:.2
+		},
+		opacity:{
+			opacity:1,
+			random:false,
+			min:0,
+			animation:true,
+			decay:true
+		},
+		position:{
+			x:0,
+			y:0,
+			random:false
+		},
+		color:{
+			color:{r:255,g:255,b:255},
+			random:true,
+			mincolor:{r:0,g:0,b:0}
+		}
 	};
-	var requestAnimFrame = (function(callback) {
-		return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-			function(callback) {
-				window.setTimeout(callback, 1000 / 60);
+	var requestAnimFrame=(function(callback){
+		return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||
+			function(callback){
+				window.setTimeout(callback,frames);
 			};
 	})();
 	var methods={
 		init:function(opt){
-			opt=$.extend({},defaults,opt||{});
+			opt=$.extend(true,{},defaults,opt||{});
 			return this.each(function(){
-				var ele=$(this);
-				var el=this;
-				var canvas=$("<canvas width='"+ele.width()+"' height='"+ele.height()+"'></canvas>");
-				ele.append(canvas);
-				canvas.css({"position":"absolute","top":"0px","left":"0px"});
+				var el=$(this);
+				var o=$.extend({},opt);
+				if(o.image){
+					var src=o.image;
+					o.image=new Image();
+					o.image.src=src;
+				}
+				o.part=[];
+				o.canvas={};
+				o.canvas.cw=el.width();
+				o.canvas.ch=el.height();
+				var canvas=$("<canvas class='particles' width='"+o.canvas.cw+"' height='"+o.canvas.ch+"'></canvas>");
+				el.append(canvas);
 				var ctx = canvas.get(0).getContext("2d");
-				el.parts=$.extend({},opt||{});
-				if(el.parts.image){
-					var src=el.parts.image;
-					el.parts.image=new Image();
-					el.parts.image.src=src;
-				}
-				el.parts.part=[];
-				el.parts.canvas={};
-				el.parts.canvas.ctx=ctx;
-				el.parts.canvas.cw=canvas.width();
-				el.parts.canvas.ch=canvas.height();
-				el.parts.canvas.co=canvas;
-				el.parts.id=$(el).attr("id");
-				for(var i=0;i<el.parts.particles;i++){
-					var crand=Math.random();
-					ele.particles("addParticle",{
-							"x":el.parts.randompoint?parseInt(Math.random()*canvas.width()):el.parts.x,
-							"y":el.parts.randompoint?parseInt(Math.random()*canvas.height()):el.parts.y,
-							"radius":el.parts.randomradius?(Math.random()*(el.parts.radius-el.parts.minradius))+el.parts.minradius:el.parts.radius,
-							"duration":el.parts.randomduration?parseInt(Math.random()*(el.parts.duration-el.parts.minduration))+el.parts.minduration:el.parts.duration,
-							"speed":el.parts.randomspeed?(Math.random()*(el.parts.speed-el.parts.minspeed))+el.parts.minspeed:el.parts.speed,
-							"opacity":el.parts.randomopacity?(Math.random()*(el.parts.opacity-el.parts.minopacity))+el.parts.minopacity:el.parts.opacity,
-							"color":el.parts.randomcolor?{r:parseInt(crand*(el.parts.color.r-el.parts.mincolor.r)+el.parts.mincolor.r),g:parseInt(crand*(el.parts.color.g-el.parts.mincolor.g)+el.parts.mincolor.g),b:parseInt(crand*(el.parts.color.b-el.parts.mincolor.b)+el.parts.mincolor.b)}:el.parts.color
+				o.canvas.ctx=ctx;
+				o.canvas.co=canvas;
+				this.parts=o;
+				for(var i=0;i<o.amount;i++){
+					var rand=Math.random();
+					el.particles("addParticle",{
+						position:{
+							x:o.position.random?parseInt(Math.random()*o.canvas.defaults.canvas.cw):o.position.x,
+							y:o.position.random?parseInt(Math.random()*o.canvas.ch):o.position.y
+						},
+						radius:{
+							radius:o.radius.random?(Math.random()*(o.radius.radius-o.radius.min))+o.radius.min:o.radius.radius
+						},
+						duration:{
+							duration:o.duration.random?parseInt(Math.random()*(o.duration.duration-o.duration.min))+o.duration.min:o.duration.duration
+						},
+						speed:{
+							speed:o.speed.random?(Math.random()*(o.speed.speed-o.speed.min))+o.speed.min:o.speed.speed
+						},
+						opacity:{
+							opacity:o.opacity.random?(Math.random()*(o.opacity.opacity-o.opacity.min))+o.opacity.min:o.opacity.opacity
+						},
+						color:{
+							color:o.color.random?{
+								r:parseInt(rand*(o.color.color.r-o.color.mincolor.r)+o.color.mincolor.r),
+								g:parseInt(rand*(o.color.color.g-o.color.mincolor.g)+o.color.mincolor.g),
+								b:parseInt(rand*(o.color.color.b-o.color.mincolor.b)+o.color.mincolor.b)
+							}:o.color.color
 						}
-					);
+					});
 				}
-				$(el).particles("step");	
+				methods["step"].apply(el);
 			});
 		},
 		addParticle:function(p){
 			return this.each(function(){
-				var el=this;
-				var o=new Object();
-				o.speed=p.speed?p.speed:el.parts.speed;
-				o.steps=p.firststep?p.firststep:el.parts.firststep;
-				o.dirx=(parseInt(Math.random()*2)==0)?1:(parseInt(Math.random()*2)==1)?Math.random():-1;
-				o.diry=(parseInt(Math.random()*2)==0)?1:-1;
-				o.alpha=0;	
-				o.maxsteps=p.duration?p.duration/(1000/60):el.parts.duration/(1000/60);	
-				o.maxalpha=p.opacity?p.opacity:el.parts.opacity;
-				o.opacity=o.maxalpha;
-				o.rad=p.radius?p.radius:el.parts.radius;
-				o.color=p.color?p.color:el.parts.color;
-				o.duration=p.duration?p.duration/(1000/60):el.parts.duration/(1000/60);
-				o.image=p.image?p.image:el.parts.image;
+				var defaults=this.parts;
+				var randomdir=function(){
+					o.dir.x=(o.dir.xrand)?(parseInt(Math.random())==0)?Math.random():(Math.random()*-1):o.dir.x;
+					o.dir.y=(o.dir.yrand)?(parseInt(Math.random())==0)?Math.random():(Math.random()*-1):o.dir.y;
+				};
+				var o={
+					color:$.extend(true,{},defaults.color,p.color||{}),
+					duration:$.extend(true,{},defaults.duration,p.duration||{}),
+					end:p.end?p.end:defaults.end,
+					image:p.image?p.image:defaults.image,
+					opacity:$.extend(true,{},defaults.opacity,p.opacity||{}),
+					radius:$.extend(true,{},defaults.radius,p.radius||{}),
+					speed:$.extend(true,{},defaults.speed,p.speed||{}),
+					position:$.extend(true,{},defaults.position,p.position||{}),
+					dir:$.extend(true,{},defaults.dir,p.dir||{}),
+					alpha:0
+				};
 				if(o.image&&!o.image.src){
 					var src=o.image;
 					o.image=new Image();
 					o.image.src=src;
 				}
+				o.duration.duration=parseInt(o.duration.duration/frames);
+				o.duration.firststep=parseInt(o.duration.firststep/frames);
+				o.duration.min=parseInt(o.duration.min/frames);
+				o.step=o.duration.firststep;
+				randomdir();
+				var e={
+					half:o.duration.duration/2,
+					min:parseInt(defaults.duration.min/frames),
+					duration:parseInt(defaults.duration.duration/frames),
+					radius:defaults.radius.radius-defaults.radius.min,
+					speed:defaults.speed-defaults.speed.min,
+					opacity:defaults.opacity.opacity-defaults.opacity.min
+				};
+				e.max=e.duration-e.min;
 				o.update=function(){
-					if(o.steps>=o.maxsteps){
-						if(el.parts.animopacity){
-							if(el.parts.decayopacity){
-								o.steps=el.parts.randomduration?-(parseInt(Math.random()*el.parts.firststep)):el.parts.firststep;
-							}
-						}
-						if(el.parts.end=="remove"){
-							o.steps=el.parts.randomduration?-(parseInt(Math.random()*el.parts.firststep)):el.parts.firststep;
+					if(o.step>=o.duration.duration){
+						o.step=o.duration.firststep;
+						if(o.end=="remove"){
 							o.remove=true;
 						}
-						else if(el.parts.end=="change"){
-							o.steps=el.parts.randomduration?-(parseInt(Math.random()*el.parts.firststep)):el.parts.firststep;
-							o.dirx=(parseInt(Math.random()*2)==0&&el.parts.randomdir.x)?1:(parseInt(Math.random()*2)==1)?Math.random():-1;
-							o.diry=(parseInt(Math.random()*2)==0&&el.parts.randomdir.y)?1:-1;
-							o.maxsteps=el.parts.randomduration?parseInt(Math.random()*(o.duration-(el.parts.minduration/(1000/60))))+(el.parts.minduration/(1000/60)):o.duration;
-							o.rad=el.parts.randomradius?(Math.random()*(el.parts.radius-el.parts.minradius))+el.parts.minradius:el.parts.radius;
-							o.speed=el.parts.randomspeed?(Math.random()*(el.parts.speed-el.parts.minspeed))+el.parts.minspeed:el.parts.speed;
-							o.maxalpha=el.parts.randomopacity?(Math.random()*(el.parts.opacity-el.parts.minopacity))+el.parts.minopacity:el.parts.opacity;
-						}
-					}				
-					else if(Math.floor(Math.random()*o.maxsteps)==1&&(o.steps%60)==0){
-						o.dirx=(parseInt(Math.random()*2)==0)?1:(parseInt(Math.random()*2)==1)?Math.random():-1;
-						o.diry=(parseInt(Math.random()*2)==0)?1:-1;
-					}
-					if(el.parts.animopacity){
-						if(el.parts.decayopacity){
-							if(o.steps<(o.maxsteps/2)){
-								o.alpha=(o.steps/(o.maxsteps/2))*o.maxalpha;
-							}
-							else{
-								o.alpha=((o.maxsteps-o.steps)/(o.maxsteps/2))*o.maxalpha;
-							}
-						}
-						else{
-							if(o.alpha<o.opacity-.1){
-								o.alpha=(o.steps/o.maxsteps)*o.maxalpha;
-							}
-							else{
-								o.alpha=o.opacity;
-							}
+						else if(o.end=="change"){
+							randomdir();
+							o.duration.duration=o.duration.random?parseInt(Math.random()*e.max)+e.min:e.duration;
+							o.radius.radius=o.radius.random?(Math.random()*e.radius)+defaults.radius.min:defaults.radius.radius;
+							o.speed.speed=o.speed.random?(Math.random()*e.speed)+defaults.speed.min:defaults.speed.speed;
+							o.opacity.opacity=o.opacity.random?(Math.random()*e.opacity)+defaults.opacity.min:defaults.opacity.opacity;
+							e.half=o.duration.duration/2;
 						}
 					}
-					else{
-						o.alpha=o.opacity;
-					}							
-					p.x = p.x+(o.dirx*o.speed);
-					p.y = p.y+(Math.sin(pi*(p.x/el.parts.canvas.cw))*(o.diry*o.speed));
-					if (p.x > el.parts.canvas.cw+o.rad+2) p.x = -o.rad;
-					else if (p.x < -(o.rad+2)) p.x = el.parts.canvas.cw+o.rad;
-					if (p.y > el.parts.canvas.ch+o.rad+2) p.y = -o.rad;
-					else if (p.y < -(o.rad+2)) p.y = el.parts.canvas.ch+o.rad;		
+					else if(o.dir.rand&&o.step>0&&(o.step%60)==0&&Math.floor(Math.random()*2)==1){
+						randomdir();
+					}
+					o.alpha=o.opacity.animation?o.opacity.decay?o.step<e.half?((o.step/e.half)*o.opacity.opacity):((o.duration.duration-o.step)/e.half)*o.opacity.opacity:o.alpha<o.opacity.opacity-.1?(o.step/o.duration.duration)*o.opacity.opacity:o.opacity.opacity:o.opacity.opacity;
+					o.alpha=o.alpha<0?0:o.alpha;
+					o.position.x+=(o.dir.x*o.speed.speed);
+					o.position.y+=(Math.sin(pi*(o.position.x/defaults.canvas.cw))*(o.dir.y*o.speed.speed));
+					o.position.x=o.position.x>defaults.canvas.cw+o.radius.radius+2?-o.radius.radius:(o.position.x<-(o.radius.radius+2))?defaults.canvas.cw+o.radius.radius:o.position.x;
+					o.position.y=o.position.y>defaults.canvas.ch+o.radius.radius+2?-o.radius.radius:(o.position.y<-(o.radius.radius+2))?defaults.canvas.ch+o.radius.radius:o.position.y;
 					if(o.image){
-						el.parts.canvas.ctx.save();
-						el.parts.canvas.ctx.translate(p.x, p.y);
-						el.parts.canvas.ctx.globalAlpha=o.alpha<0?0:o.alpha;
-						el.parts.canvas.ctx.drawImage(o.image,-o.rad,-o.rad,o.rad*2,(o.rad*2)*o.image.height/o.image.width);
-						el.parts.canvas.ctx.restore();
+						defaults.canvas.ctx.save();
+						defaults.canvas.ctx.translate(o.position.x, o.position.y);
+						defaults.canvas.ctx.globalAlpha=o.alpha;
+						defaults.canvas.ctx.drawImage(o.image,-o.radius.radius,-o.radius.radius,o.radius.radius*2,(o.radius.radius*2)*o.image.height/o.image.width);
+						defaults.canvas.ctx.restore();
 					}
 					else{
-						el.parts.canvas.ctx.beginPath();
-						el.parts.canvas.ctx.arc(p.x,p.y,o.rad,0,pi, false);
-						el.parts.canvas.ctx.fillStyle = "rgba("+o.color.r+","+o.color.g+","+o.color.b+","+o.alpha+")";
-						el.parts.canvas.ctx.fill();
+						defaults.canvas.ctx.beginPath();
+						defaults.canvas.ctx.arc(o.position.x,o.position.y,o.radius.radius,0,pi, false);
+						defaults.canvas.ctx.fillStyle = "rgba("+o.color.color.r+","+o.color.color.g+","+o.color.color.b+","+o.alpha+")";
+						defaults.canvas.ctx.fill();
 					}
-					o.steps++;
+					o.step++;
 				}
-				el.parts.part.push(o);
+				defaults.part.push(o);
 			});
 		},
 		stopParticles:function(){
 			return this.each(function(){
 				var el=this;
-				if(this.parts.stop==false){
-					this.parts.stop=true;
+				if(el.parts.stop==false){
+					el.parts.stop=true;
 				}else{
-					this.parts.stop=false;
-					$(el).particles("step");
+					el.parts.stop=false;
+					methods["step"].apply($(el));
 				}
 			});
 		},
 		step:function(){
 			return this.each(function(){
 				var el=this;
-				if(this.parts.stop==false){
+				if(el.parts.stop==false){
+					var rarray=[];
 					el.parts.canvas.ctx.clearRect(0,0,el.parts.canvas.cw,el.parts.canvas.ch);
 					$.each(el.parts.part,function(i,n){
-						if(n&&!n.remove){
-							n.update();
+						n.update();
+						if(!n.remove){
+							rarray.push(n);
 						}
 					});
-					$.each(el.parts.part,function(i,n){
-						if(n&&n.remove&&$.inArray(n,el.parts.part)!=-1){
-							el.parts.part.splice($.inArray(n,el.parts.part), 1);
-						}
-					});		
+					el.parts.part=rarray;
 					requestAnimFrame(function(){
-					   $(el).particles("step"); 
+					  methods["step"].apply($(el));
 					});
 				}
 			});
@@ -209,6 +228,6 @@ $.fn.particles=function(method){
     }else if(typeof method==='object'||!method){
 		return methods.init.apply(this,arguments);
     }else{
-		$.error('Method '+method+' does not exist on jquery.canvas.particles');
+		$.error('Method '+method+' does not exist on jQuery.particles');
     }
 };

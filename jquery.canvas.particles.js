@@ -67,9 +67,9 @@ $.fn.particles=function(method){
 				}
 				o.part=[];
 				o.canvas={};
-				o.canvas.cw=el.width();
-				o.canvas.ch=el.height();
-				var canvas=$("<canvas class='particles' width='"+o.canvas.cw+"' height='"+o.canvas.ch+"'></canvas>");
+				o.canvas.width=el.width();
+				o.canvas.height=el.height();
+				var canvas=$("<canvas class='particles' width='"+o.canvas.width+"' height='"+o.canvas.height+"'></canvas>");
 				if(o.layout=="before"){
 					el.append(canvas);
 				}
@@ -78,14 +78,14 @@ $.fn.particles=function(method){
 				}
 				var ctx = canvas.get(0).getContext("2d");
 				o.canvas.ctx=ctx;
-				o.canvas.co=canvas;
+				o.canvas.object=canvas;
 				this.parts=o;
 				for(var i=0;i<o.amount;i++){
 					var rand=Math.random();
-					el.particles("addParticle",{
+					el.particles("add",{
 						position:{
-							x:o.position.random?parseInt(Math.random()*o.canvas.cw):o.position.x,
-							y:o.position.random?parseInt(Math.random()*o.canvas.ch):o.position.y
+							x:o.position.random?parseInt(Math.random()*o.canvas.width):o.position.x,
+							y:o.position.random?parseInt(Math.random()*o.canvas.height):o.position.y
 						},
 						radius:{
 							radius:o.radius.random?(Math.random()*(o.radius.radius-o.radius.min))+o.radius.min:o.radius.radius
@@ -111,7 +111,7 @@ $.fn.particles=function(method){
 				methods["step"].apply(el);
 			});
 		},
-		addParticle:function(p){
+		add:function(p){
 			return this.each(function(){			
 				var defaults=this.parts;
 				var o={
@@ -135,7 +135,7 @@ $.fn.particles=function(method){
 					o.image=new Image();
 					o.image.src=src;
 				}
-				o.position=p.position&&p.position.random?{x:parseInt(Math.random()*defaults.canvas.cw),y:parseInt(Math.random()*defaults.canvas.ch),random:true}:o.position;
+				o.position=p.position&&p.position.random?{x:parseInt(Math.random()*defaults.canvas.width),y:parseInt(Math.random()*defaults.canvas.height),random:true}:o.position;
 				o.duration.duration=parseInt(o.duration.duration/frames);
 				o.duration.firststep=parseInt(o.duration.firststep/frames);
 				o.duration.min=parseInt(o.duration.min/frames);
@@ -177,9 +177,9 @@ $.fn.particles=function(method){
 					o.alpha=o.opacity.animation?o.opacity.decay?o.step<e.half?((o.step/e.half)*o.opacity.opacity):((o.duration.duration-o.step)/e.half)*o.opacity.opacity:o.alpha<o.opacity.opacity-.1?(o.step/o.duration.duration)*o.opacity.opacity:o.opacity.opacity:o.opacity.opacity;
 					o.alpha=o.alpha<0?0:o.alpha;
 					o.position.x+=(o.dir.x*o.speed.speed);
-					o.position.y+=(Math.sin(pi*(o.position.x/defaults.canvas.cw))*(o.dir.y*o.speed.speed));
-					o.position.x=o.position.x>defaults.canvas.cw+o.radius.radius+2?-o.radius.radius:(o.position.x<-(o.radius.radius+2))?defaults.canvas.cw+o.radius.radius:o.position.x;
-					o.position.y=o.position.y>defaults.canvas.ch+o.radius.radius+2?-o.radius.radius:(o.position.y<-(o.radius.radius+2))?defaults.canvas.ch+o.radius.radius:o.position.y;
+					o.position.y+=(Math.sin(pi*(o.position.x/defaults.canvas.width))*(o.dir.y*o.speed.speed));
+					o.position.x=o.position.x>defaults.canvas.width+o.radius.radius+2?-o.radius.radius:(o.position.x<-(o.radius.radius+2))?defaults.canvas.width+o.radius.radius:o.position.x;
+					o.position.y=o.position.y>defaults.canvas.height+o.radius.radius+2?-o.radius.radius:(o.position.y<-(o.radius.radius+2))?defaults.canvas.height+o.radius.radius:o.position.y;
 					if(o.image){
 						defaults.canvas.ctx.save();
 						defaults.canvas.ctx.translate(o.position.x, o.position.y);
@@ -198,7 +198,7 @@ $.fn.particles=function(method){
 				defaults.part.push(o);
 			});
 		},
-		stopParticles:function(){
+		stop:function(){
 			return this.each(function(){
 				var el=this;
 				if(el.parts.stop==false){
@@ -214,7 +214,7 @@ $.fn.particles=function(method){
 				var el=this;
 				if(el.parts.stop==false){
 					var rarray=[];
-					el.parts.canvas.ctx.clearRect(0,0,el.parts.canvas.cw,el.parts.canvas.ch);
+					el.parts.canvas.ctx.clearRect(0,0,el.parts.canvas.width,el.parts.canvas.height);
 					$.each(el.parts.part,function(i,n){
 						n.update();
 						if(!n.remove){
@@ -231,7 +231,7 @@ $.fn.particles=function(method){
 		destroy:function(){
 			return this.each(function(){
 				var el=this;
-				el.parts.canvas.co.remove();
+				el.parts.canvas.object.remove();
 				el.parts={};
 			});
 		}

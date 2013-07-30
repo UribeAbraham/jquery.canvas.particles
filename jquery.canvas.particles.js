@@ -48,10 +48,17 @@ $.fn.particles=function(method){
 		},
 		layout:"before"
 	};
-	var requestAnimFrame=(function(callback){
+	var requestAnimFrame=(function(){
 		return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||
 			function(callback){
-				window.setTimeout(callback,frames);
+				var id=window.setTimeout(callback,frames);
+				return id;
+			};
+	})();
+	var cancelAnimationFrame=(function(){
+		return window.cancelAnimationFrame||window.webkitCancelAnimationFrame||window.mozCancelAnimationFrame||window.oCancelAnimationFrame||window.msCancelAnimationFrame||window.webkitCancelRequestAnimationFrame||window.mozCancelRequestAnimationFrame||window.oCancelRequestAnimationFrame||window.msCancelRequestAnimationFrame||
+			function(id){
+				clearTimeout(id);
 			};
 	})();
 	var methods={
@@ -203,6 +210,7 @@ $.fn.particles=function(method){
 				var el=this;
 				if(el.parts.stop==false){
 					el.parts.stop=true;
+					cancelAnimationFrame(el.parts.requestid);
 				}else{
 					el.parts.stop=false;
 					methods["step"].apply($(el));
@@ -212,7 +220,7 @@ $.fn.particles=function(method){
 		step:function(){
 			return this.each(function(){
 				var el=this;
-				if(el.parts.stop==false){
+				if(el.parts&&el.parts.stop==false){
 					var rarray=[];
 					el.parts.canvas.ctx.clearRect(0,0,el.parts.canvas.width,el.parts.canvas.height);
 					$.each(el.parts.part,function(i,n){
@@ -222,7 +230,7 @@ $.fn.particles=function(method){
 						}
 					});
 					el.parts.part=rarray;
-					requestAnimFrame(function(){
+					el.parts.requestid=requestAnimFrame(function(){
 					  methods["step"].apply($(el));
 					});
 				}
@@ -231,8 +239,9 @@ $.fn.particles=function(method){
 		destroy:function(){
 			return this.each(function(){
 				var el=this;
+				methods["stop"].apply($(el));
 				el.parts.canvas.object.remove();
-				el.parts={};
+				delete el.parts;
 			});
 		}
 	};

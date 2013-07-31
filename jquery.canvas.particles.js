@@ -10,7 +10,9 @@ $.fn.particles=function(method){
 			y:1,
 			xrand:true,
 			yrand:true,
-			rand:true
+			rand:true,
+			xfunction:function(dx,px,dy,py,s,w,h){return px+=dx*s;},
+			yfunction:function(dx,px,dy,py,s,w,h){return py+=(Math.sin(2*Math.PI*(px/w))*(dy*s))}
 		},
 		image:false,
 		radius:{
@@ -46,7 +48,8 @@ $.fn.particles=function(method){
 			random:false,
 			min:{r:0,g:0,b:0}
 		},
-		layout:"before"
+		layout:"before",
+		bound:"back"
 	};
 	var requestAnimFrame=(function(){
 		return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||
@@ -131,6 +134,7 @@ $.fn.particles=function(method){
 					speed:$.extend(true,{},defaults.speed,p.speed||{}),
 					position:$.extend(true,{},defaults.position,p.position||{}),
 					dir:$.extend(true,{},defaults.dir,p.dir||{}),
+					bound:p.bound?p.bound:defaults.bound,
 					alpha:0
 				};
 				var randomdir=function(){
@@ -166,10 +170,10 @@ $.fn.particles=function(method){
 						else if(o.end=="change"){
 							randomdir();
 							var rand=Math.random();
-							o.duration.duration=o.duration.random?parseInt(Math.random()*e.max)+e.min:e.duration;
-							o.radius.radius=o.radius.random?(Math.random()*e.radius)+defaults.radius.min:defaults.radius.radius;
-							o.speed.speed=o.speed.random?(Math.random()*e.speed)+defaults.speed.min:defaults.speed.speed;
-							o.opacity.opacity=o.opacity.random?(Math.random()*e.opacity)+defaults.opacity.min:defaults.opacity.opacity;
+							o.duration.duration=o.duration.random?parseInt(Math.random()*e.max)+e.min:o.duration.duration;
+							o.radius.radius=o.radius.random?(Math.random()*e.radius)+defaults.radius.min:o.radius.radius;
+							o.speed.speed=o.speed.random?(Math.random()*e.speed)+defaults.speed.min:o.speed.speed;
+							o.opacity.opacity=o.opacity.random?(Math.random()*e.opacity)+defaults.opacity.min:o.opacity.opacity;
 							o.color.color=o.color.random?{
 								r:parseInt(rand*(defaults.color.color.r-defaults.color.min.r)+defaults.color.min.r),
 								g:parseInt(rand*(defaults.color.color.g-defaults.color.min.g)+defaults.color.min.g),
@@ -183,15 +187,52 @@ $.fn.particles=function(method){
 					}
 					o.alpha=o.opacity.animation?o.opacity.decay?o.step<e.half?((o.step/e.half)*o.opacity.opacity):((o.duration.duration-o.step)/e.half)*o.opacity.opacity:o.alpha<o.opacity.opacity-.1?(o.step/o.duration.duration)*o.opacity.opacity:o.opacity.opacity:o.opacity.opacity;
 					o.alpha=o.alpha<0?0:o.alpha;
-					o.position.x+=(o.dir.x*o.speed.speed);
-					o.position.y+=(Math.sin(pi*(o.position.x/defaults.canvas.width))*(o.dir.y*o.speed.speed));
-					o.position.x=o.position.x>defaults.canvas.width+o.radius.radius+2?-o.radius.radius:(o.position.x<-(o.radius.radius+2))?defaults.canvas.width+o.radius.radius:o.position.x;
-					o.position.y=o.position.y>defaults.canvas.height+o.radius.radius+2?-o.radius.radius:(o.position.y<-(o.radius.radius+2))?defaults.canvas.height+o.radius.radius:o.position.y;
+					o.position.x=o.dir.xfunction(o.dir.x,o.position.x,o.dir.y,o.position.y,o.speed.speed,defaults.canvas.width,defaults.canvas.height,o.step);
+					o.position.y=o.dir.yfunction(o.dir.x,o.position.x,o.dir.y,o.position.y,o.speed.speed,defaults.canvas.width,defaults.canvas.height,o.step);	
+					if(o.bound=="back"){
+						o.position.x=o.position.x>defaults.canvas.width+o.radius.radius+2?-o.radius.radius:(o.position.x<-(o.radius.radius+2))?defaults.canvas.width+o.radius.radius:o.position.x;
+						if(!o.image){
+							o.position.y=o.position.y>defaults.canvas.height+o.radius.radius+2?-o.radius.radius:(o.position.y<-(o.radius.radius+2))?defaults.canvas.height+o.radius.radius:o.position.y;
+						}
+						else{
+							o.position.y=o.position.y>defaults.canvas.height+o.radius.radius*o.image.height/o.image.width+2?-o.radius.radius*o.image.height/o.image.width:(o.position.y<-(o.radius.radius*o.image.height/o.image.width+2))?defaults.canvas.height+o.radius.radius*o.image.height/o.image.width:o.position.y;	
+						}
+					}
+					else if(o.bound=="bounce"){
+						if(o.position.x+o.radius.radius>=defaults.canvas.width){
+							o.position.x+=-o.speed.speed;
+							o.dir.x=-1;
+						}
+						else if(o.position.x<=o.radius.radius){
+							o.position.x+=o.speed.speed;
+							o.dir.x=1;
+						}
+						if(!o.image){
+							if(o.position.y+o.radius.radius>=defaults.canvas.height){
+								o.position.y+=-o.speed.speed;
+								o.dir.y=-1;
+							}
+							else if(o.position.y<=o.radius.radius){
+								o.position.y+=o.speed.speed;
+								o.dir.y=1;
+							}
+						}
+						else{
+							if(o.position.y+o.radius.radius*o.image.height/o.image.width>=defaults.canvas.height){
+								o.position.y+=-o.speed.speed;
+								o.dir.y=-1;
+							}
+							else if(o.position.y<=o.radius.radius*o.image.height/o.image.width){
+								o.position.y+=o.speed.speed;
+								o.dir.y=1;
+							}
+						}
+					}
 					if(o.image){
 						defaults.canvas.ctx.save();
 						defaults.canvas.ctx.translate(o.position.x, o.position.y);
 						defaults.canvas.ctx.globalAlpha=o.alpha;
-						defaults.canvas.ctx.drawImage(o.image,-o.radius.radius,-o.radius.radius,o.radius.radius*2,(o.radius.radius*2)*o.image.height/o.image.width);
+						defaults.canvas.ctx.drawImage(o.image,-o.radius.radius,-o.radius.radius*o.image.height/o.image.width,o.radius.radius*2,(o.radius.radius*2)*o.image.height/o.image.width);
 						defaults.canvas.ctx.restore();
 					}
 					else{

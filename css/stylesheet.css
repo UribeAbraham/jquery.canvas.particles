@@ -55,8 +55,9 @@ body {
 	position:relative;
 	display:block;
 	background:#f0f0f0;
-	border:1px solid #777777;
+	border:1px solid #888888;
 	overflow:hidden;
+	margin-right:0px;
 }
 .rectangle div{
 	font-size:50px;
@@ -192,17 +193,6 @@ a.button span {
 
 code, pre {
   color: #222;
-}
-
-pre {
-  background-color: #f2f2f2;
-  border: solid 1px #ddd;
-  padding: 0 3px;
-  display:block;
-  width:600px;
-  height:200px;
-  float:left;
-  margin:10px;
 }
 /* COMMON STYLES */
 
@@ -422,15 +412,21 @@ pre.prettyprint
     border: 1px solid #888888;
     overflow: auto;
     padding: 0;
-    position: relative;
 	word-wrap: normal;
 	-ms-word-wrap: normal;
 	white-space: pre;
-	max-height:none;
 	position:relative;
 	display:block;
 	text-shadow:none;
 	font-size: 83%;
+	background-color: #f2f2f2;
+	display:block;
+	width:600px;
+	height:200px;
+	float:left;
+	margin:10px;
+	margin-left:0px;
+	border-left:0px;
 }
 pre.prettyprint li
 {

@@ -4,7 +4,7 @@ a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
 b, u, i, center,
-dl, dt, dd, ol, ul, li,
+dl, dt, dd,  ul,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed, 
@@ -25,9 +25,6 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 }
-ol, ul {
-	list-style: none;
-}
 blockquote, q {
 	quotes: none;
 }
@@ -45,7 +42,7 @@ body {
   font-size: 1em;
   line-height: 1.5; 
   background: #e7e7e7 url(../images/body-bg.png) 0 0 repeat;
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+  font-family: Helvetica, Arial, serif;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
   color: #6d6d6d;
 }
@@ -75,7 +72,7 @@ body {
 }
 #main_content{
 	display:block;
-	height:700px;
+	text-shadow: 0 1px 1px rgba(3, 3, 3, 0.5);
 }
 #rec6{
 	background:#005577;
@@ -96,7 +93,7 @@ header {
 }
 
 header h1 {
-  font-family: 'Chivo', 'Helvetica Neue', Helvetica, Arial, serif; font-weight: 900;
+  font-family: Helvetica, Arial, serif; font-weight: 900;
   letter-spacing: -1px;
   font-size: 48px;
   color: #303030;
@@ -117,7 +114,7 @@ header h2 {
 }
 
 .inner {
-  width: 800px;
+  width: 1000px;
   margin: 0 auto;
 }
 
@@ -194,37 +191,19 @@ a.button span {
 }
 
 code, pre {
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
   color: #222;
-  margin-bottom: 30px;
-  font-size: 14px;
-}
-
-code {
-  background-color: #f2f2f2;
-  border: solid 1px #ddd;
-  padding: 0 3px;
 }
 
 pre {
-  padding: 20px;
-  background: #303030;
-  color: #f2f2f2;
-  text-shadow: none;
-  overflow: auto;
+  background-color: #f2f2f2;
+  border: solid 1px #ddd;
+  padding: 0 3px;
+  display:block;
+  width:600px;
+  height:200px;
+  float:left;
+  margin:10px;
 }
-pre code {
-  color: #f2f2f2;
-  background-color: #303030;
-  border: none;
-  padding: 0;
-}
-
-ul, ol, dl {
-  margin-bottom: 20px;
-}
-
-
 /* COMMON STYLES */
 
 hr {
@@ -327,11 +306,6 @@ ul li {
   padding-left: 20px;
 }
 
-ol li {
-  list-style: decimal inside;
-  padding-left: 3px;
-}
-
 dl dt {
   color: #303030;
 }
@@ -391,7 +365,147 @@ footer a:hover {
     margin: 0 auto;
   }
 }
+/*--------------prettify---------------*/
+.str
+{
+    color: #808080;
+}
+.kwd
+{
+    color: #000080;
+	font-weight: bold;
+	font-style: italic;
+}
+.com
+{
+    color: #008000;
+}
+.typ
+{
+    color: #8000ff;
+}
+.lit
+{
+    color: #ff0000;
+}
+.pun
+{
+    color: #000000;
+    font-weight:bold;
+}
+.pln
+{
+    color: #000000;
+}
+.tag
+{
+    color: #0000ff;
+}
+.atn
+{
+    color: #ff0000;
+}
+.atv
+{
+    color: #8000ff;
+}
+.dec
+{
+    color: purple;
+}
+.mobile .main-inner{
+background:none!important;
+}
+pre.prettyprint
+{
+	background: none repeat scroll 0 0 #E4E4E4;
+    border: 1px solid #888888;
+    overflow: auto;
+    padding: 0;
+    position: relative;
+	word-wrap: normal;
+	-ms-word-wrap: normal;
+	white-space: pre;
+	max-height:none;
+	position:relative;
+	display:block;
+	text-shadow:none;
+	font-size: 83%;
+}
+pre.prettyprint li
+{
+	margin:0!important;
+width:auto;
+}
+pre.prettyprint li span{
+width:auto;
+}
+ol.linenums
+{
+    margin-top: 0;
+    margin-bottom: 0;
+	padding:0 0 0 28px;
+}
+li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
+{
+    color: #808080;
+    list-style-type: decimal;
+	background:#ffffff;
+}
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+    background: #f8f8f8;
+}
+@media print
+{
+    .str
+    {
+        color: #060;
+    }
+    .kwd
+    {
+        color: #000080!important;
+        font-weight: bold;
+    }
+    .com
+    {
+        color: #600;
+        font-style: italic;
+    }
+    .typ
+    {
+        color: #404;
+        font-weight: bold;
+    }
+    .lit
+    {
+        color: #044;
+    }
+    .pun
+    {
+        color: #440;
+    }
+    .pln
+    {
+        color: #000;
+    }
+    .tag
+    {
+        color: #006;
+        font-weight: bold;
+    }
+    .atn
+    {
+        color: #404;
+    }
+    .atv
+    {
+        color: #060;
+    }
+}
 
+ul, ol, dl {
+  margin-bottom: 20px;
+}
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
 @media only screen and (min-width: 480px) and (max-width: 767px) {}
 

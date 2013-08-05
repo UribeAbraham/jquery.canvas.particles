@@ -139,7 +139,8 @@ $("#rec6").click(function(){
 					}
 				}
 			},
-			bound:false
+			bound:false,
+			layout:"after"
 		});
 		for(var i=0;i<50;i++){
 			$(this).particles("add",{
@@ -150,4 +151,12 @@ $("#rec6").click(function(){
 		}
 	}
 });
+	prettyPrint();
+    $(".prettyprint").each(function(){
+			var swidth=$(this)[0].scrollWidth;
+                        swidth=swidth-28;
+			$(this).find(".linenums").css({"width":swidth+"px"});
+
+    });
+
 });

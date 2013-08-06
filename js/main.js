@@ -8,6 +8,8 @@ $("#rec1").particles({
 	color:{random:true}
 }).click(function(){
 	$(this).particles("stop");
+}).on("stateChange",function(event,state){
+	console.log(state);
 });
 
 $("#rec2").particles({
@@ -54,21 +56,35 @@ $("#rec3").particles({
 		end:"change",bound:"bounce"
 	});
 });	
-$("#rec4").particles({
-	amount:20,
-	radius:{radius:10,random:true},
-	opacity:{decay:true,animation:true},
-	duration:{duration:10000,random:true,firststep:-1000},
-	speed:{speed:1.5,random:true},
-	end:"remove",
-	position:{x:0,y:0},
-	color:{color:{r:0,g:0,b:150},random:true,min:{r:0,g:0,b:100}},
-	dir:{
-		x:1,
-		y:1,
-		xrand:false,
-		yrand:true,
-		rand:true
+
+$("#rec4").click(function(){
+	if(!this.parts){
+		$(this).particles({
+			amount:10,
+			radius:{radius:10,random:true},
+			opacity:{decay:true,animation:true},
+			duration:{duration:10000,random:true,firststep:-1000},
+			speed:{speed:1.5,random:true},
+			end:"remove",
+			position:{x:0,y:0},
+			color:{color:{r:0,g:0,b:150},random:true,min:{r:0,g:0,b:100}},
+			dir:{
+				x:1,
+				y:1,
+				xrand:false,
+				yrand:true,
+				rand:true
+			},
+			create:function(){
+				console.log("created "+$(this).attr("id")+" particles");
+			}
+		});
+	}
+}).on("create",function(){
+	console.log("on create rec4");
+}).on("removeParticle",function(){
+	if(this.parts.part.length-1==0){
+		$(this).particles("destroy");
 	}
 });
 
@@ -102,11 +118,13 @@ $("#rec5").click(function(){
 			}
 		});
 	}
+}).on("create",function(){
+	console.log("created rec5 particles");
+}).on("addParticle",function(event,particle){
+	console.log("created particle on rec5");
 });
+
 $("#rec6").click(function(){
-	if(this.parts&&this.parts.part.length==0){
-		$(this).particles("destroy");
-	}
 	if(!this.parts){
 		$(this).particles({
 			amount:0,
@@ -140,7 +158,8 @@ $("#rec6").click(function(){
 				}
 			},
 			bound:false,
-			layout:"after"
+			layout:"after",
+			create:function(){console.log("created "+$(this).attr("id"))}
 		});
 		for(var i=0;i<50;i++){
 			$(this).particles("add",{
@@ -151,6 +170,7 @@ $("#rec6").click(function(){
 		}
 	}
 });
+
 	prettyPrint();
     $(".prettyprint").each(function(){
 			var swidth=$(this)[0].scrollWidth;

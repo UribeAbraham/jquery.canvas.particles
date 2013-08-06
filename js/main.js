@@ -1,5 +1,17 @@
 $(window).load(function(){
 
+
+
+$("#rec0").click(function(){
+	var opt=$.parseJSON($("#options").val());
+	if(this.parts){
+		$(this).particles("destroy");
+	}
+	$(this).particles(opt);
+});
+
+
+
 $("#rec1").particles({
 	amount:10,
 	duration:{random:true},

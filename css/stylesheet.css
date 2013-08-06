@@ -502,6 +502,33 @@ li.L1, li.L3, li.L5, li.L7, li.L9 {
 ul, ol, dl {
   margin-bottom: 20px;
 }
+#rec0{
+	border: 1px solid #ccc;
+    cursor: pointer;
+    height: 250px;
+    position: relative;
+    width: 700px;
+	margin:0 auto;
+}
+#rec0 div{
+	font-size: 25px;
+    margin: 0 auto;
+    position: relative;
+    top: 100px;
+    width: 142px;
+}
+#options{
+	resize:none;
+	width:698px;
+	margin:0;
+	padding:0;
+	height:200px;
+}
+.opt{
+	margin:0 auto;
+	width:698px;
+	height:200px;
+}
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
 @media only screen and (min-width: 480px) and (max-width: 767px) {}
 

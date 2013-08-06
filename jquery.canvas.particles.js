@@ -1,3 +1,4 @@
+(function($, window, undefined){
 $.fn.particles=function(method){
 	var pi=2*Math.PI;
 	var frames=1000/60;
@@ -49,7 +50,11 @@ $.fn.particles=function(method){
 			min:{r:0,g:0,b:0}
 		},
 		layout:"before",
-		bound:"back"
+		bound:"back",
+		create:false,
+		addParticle:false,
+		stateChange:false,
+		removeParticle:false
 	};
 	var requestAnimFrame=(function(){
 		return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||
@@ -118,12 +123,17 @@ $.fn.particles=function(method){
 						}
 					});
 				}
+				if($.isFunction(o.create)){
+					el.off("create.particles").on("create.particles",o.create);
+				}
+				el.trigger("create");
 				methods["step"].apply(el);
 			});
 		},
 		add:function(p){
-			return this.each(function(){			
-				var defaults=this.parts;
+			return this.each(function(){
+				var el=this;
+				var defaults=el.parts;
 				var o={
 					color:$.extend(true,{},defaults.color,p.color||{}),
 					duration:$.extend(true,{},defaults.duration,p.duration||{}),
@@ -243,6 +253,10 @@ $.fn.particles=function(method){
 					}
 					o.step++;
 				}
+				if($.isFunction(defaults.addParticle)){
+					$(el).off("addParticle.particles").on("addParticle.particles",defaults.addParticle);
+				}
+				$(el).trigger("addParticle",o);
 				defaults.part.push(o);
 			});
 		},
@@ -256,6 +270,10 @@ $.fn.particles=function(method){
 					el.parts.stop=false;
 					methods["step"].apply($(el));
 				}
+				if($.isFunction(el.parts.stateChange)){
+					$(el).off("stateChange.particles").on("stateChange.particles",el.parts.stateChange);
+				}
+				$(el).trigger("stateChange",el.parts.stop==false?"playing":"stopped");
 			});
 		},
 		step:function(){
@@ -269,11 +287,19 @@ $.fn.particles=function(method){
 						if(!n.remove){
 							rarray.push(n);
 						}
+						else{
+							if($.isFunction(el.parts.removeParticle)){
+								$(el).off("removeParticle.particles").on("removeParticle.particles",el.parts.removeParticle);
+							}
+							$(el).trigger("removeParticle",n);
+						}
 					});
-					el.parts.part=rarray;
-					el.parts.requestid=requestAnimFrame(function(){
-					  methods["step"].apply($(el));
-					});
+					if(el.parts){
+						el.parts.part=rarray;
+						el.parts.requestid=requestAnimFrame(function(){
+						  methods["step"].apply($(el));
+						});
+					}
 				}
 			});
 		},
@@ -294,3 +320,4 @@ $.fn.particles=function(method){
 		$.error('Method '+method+' does not exist on jQuery.particles');
     }
 };
+})(jQuery, window);

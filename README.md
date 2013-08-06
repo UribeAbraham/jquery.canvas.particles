@@ -9,6 +9,9 @@ Getting Started
 Include jQuery, jquery.canvas.particles.js, style.css and call <code>.particles</code> method on some jquery object
 ```html
 <html>
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
 <body>
   <div id="test">test</div>
 	<script src="jquery.js"></script>

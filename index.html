@@ -229,18 +229,73 @@ $("#rec6").click(function(){
 				<div>Click to start</div>
 			</div>
 			<div class="opt">
-<textarea id="options">
-{
-	"amount":50,
-	"duration":{"random":true},
-	"speed":{"speed":1},
-	"layout":"after",
-	"color":{
-		"color":{"r":100,"g":255,"b":100},
-		"random":true
-	}
-}
-</textarea>
+				Options
+				<div>
+					<label>amount:</label><input id="amount" type="text" value="10" style="width:40px">
+					<label>end:</label><select id="end">
+								<option value="change">change</option>
+								<option value="destroy">destroy</option>
+							   </select>
+					<label>layout:</label><select id="layout">
+								<option value="before">before</option>
+								<option value="after">after</option>
+							   </select>
+					<label>bound:</label><select id="bound">
+								<option value="back">back</option>
+								<option value="bounce">bounce</option>
+							   </select>
+					<label>stop:</label><input id="stop" type="checkbox">
+				</div>
+				<div>
+					direction
+					<label>x:</label><select id="x">
+								<option value="-1">-1</option>
+								<option value="0">0</option>
+								<option value="1">1</option>
+							   </select>
+					<label>y:</label><select id="y">
+								<option value="-1">-1</option>
+								<option value="0">0</option>
+								<option value="1">1</option>
+							   </select>
+					<label>xrand:</label><input id="xrand" type="checkbox" checked="true">
+					<label>yrand:</label><input id="yrand" type="checkbox" checked="true">
+					<label>rand:</label><input id="randdir" type="checkbox" checked="true">
+				</div>
+				<div>
+					<label>radius:</label><input id="radius" type="text" value="10" style="width:40px">
+					<label>min:</label><input id="minradius" type="text" value="2" style="width:40px">
+					<label>random:</label><input id="randomradius" type="checkbox" checked="true">
+				</div>
+				<div>
+					<label>duration:</label><input id="duration" type="text" value="10000" style="width:50px">
+					<label>min:</label><input id="minduration" type="text" value="1000" style="width:50px">
+					<label>firststep:</label><input id="firststep" type="text" value="-1000" style="width:50px">
+					<label>random:</label><input id="randomduration" type="checkbox">
+				</div>
+				<div>
+					<label>speed:</label><input id="speed" type="text" value="1" style="width:40px">
+					<label>min:</label><input id="minspeed" type="text" value=".2" style="width:40px">
+					<label>random:</label><input id="randomspeed" type="checkbox" checked="true">
+				</div>	
+				<div>
+					<label>opacity:</label><input id="opacity" type="text" value="1" style="width:40px">
+					<label>min:</label><input id="minopacity" type="text" value="0"  style="width:40px">
+					<label>animation:</label><input id="animation" type="checkbox" checked="true">
+					<label>decay:</label><input id="decay" type="checkbox">
+					<label>random:</label><input id="randomopacity" type="checkbox">
+				</div>
+				<div>
+					position
+					<label>x:</label><input id="positionx" type="text" value="0"  style="width:40px">
+					<label>y:</label><input id="positiony" type="text" value="0"  style="width:40px">
+					<label>random:</label><input id="randomposition" type="checkbox">
+				</div>
+				<div>
+					<label>color:</label>(r:<input id="cr" type="text" value="255" style="width:30px">g:<input id="cg" type="text" value="0" style="width:30px">b:<input id="cb" type="text" value="0" style="width:30px">)
+					<label>min:</label>(r:<input id="mr" type="text" value="0" style="width:30px">g:<input id="mg" type="text" value="0" style="width:30px">b:<input id="mb" type="text" value="0" style="width:30px">)
+					<label>random:</label><input id="randomcolor" type="checkbox" checked="true">
+				</div>
 			</div>
         </section>
 		<hr>

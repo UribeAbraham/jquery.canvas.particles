@@ -517,17 +517,16 @@ ul, ol, dl {
     top: 100px;
     width: 150px;
 }
-#options{
-	resize:none;
-	width:698px;
-	margin:0;
-	padding:0;
-	height:200px;
-}
 .opt{
-	margin:0 auto;
-	width:698px;
-	height:200px;
+	font-size: 12px;
+    height: 250px;
+    margin: 0 auto;
+    text-shadow: none;
+    width: 698px;;
+}
+.opt input{
+	margin-right: 10px;
+    margin-top: 5px;
 }
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
 @media only screen and (min-width: 480px) and (max-width: 767px) {}

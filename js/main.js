@@ -1,16 +1,68 @@
 $(window).load(function(){
 
-
-
 $("#rec0").click(function(){
-	var opt=$.parseJSON($("#options").val());
+	//var opt=$.parseJSON($("#options").val());
 	if(this.parts){
 		$(this).particles("destroy");
 	}
+	var opt={
+		amount:parseInt($("#amount").val()),
+		end:$("#end").val(),
+		layout:$("#layout").val(),
+		bound:$("#bound").val(),
+		stop:$("#stop").prop('checked'),
+		dir:{
+			x:parseInt($("#x").val()),
+			y:parseInt($("#y").val()),
+			xrand:$("#xrand").prop('checked'),
+			yrand:$("#yrand").prop('checked'),
+			rand:$("#randdir").prop('checked')
+		},
+		radius:{
+			radius:parseFloat($("#radius").val()),
+			min:parseFloat($("#minradius").val()),
+			random:$("#randomradius").prop('checked')
+		},
+		duration:{
+			duration:parseFloat($("#duration").val()),
+			min:parseFloat($("#minduration").val()),
+			firststep:parseFloat($("#firststep").val()),
+			random:$("#randomduration").prop('checked')
+		},
+		speed:{
+			speed:parseFloat($("#speed").val()),
+			min:parseFloat($("#minspeed").val()),
+			random:$("#randomspeed").prop('checked')
+		},
+		opacity:{
+			opacity:parseFloat($("#opacity").val()),
+			min:parseFloat($("#minopacity").val()),
+			animation:$("#animation").prop('checked'),
+			decay:$("#decay").prop('checked'),
+			random:$("#randomopacity").prop('checked')
+		},
+		position:{
+			x:parseFloat($("#positionx").val()),
+			y:parseFloat($("#positiony").val()),
+			random:$("#randomposition").prop('checked')
+		},
+		color:{
+			color:{
+				r:parseInt($("#cr").val()),
+				g:parseInt($("#cg").val()),
+				b:parseInt($("#cb").val())
+			},
+			min:{
+				r:parseInt($("#mr").val()),
+				g:parseInt($("#mg").val()),
+				b:parseInt($("#mb").val())
+			},
+			random:$("#randomcolor").prop('checked')
+		}
+	};
+	console.log(opt);
 	$(this).particles(opt);
 });
-
-
 
 $("#rec1").particles({
 	amount:10,

@@ -2,7 +2,7 @@ jquery.canvas.particles
 =======================
 
 create particles over HTML elements using canvas
-Demo: <a href="http://worzt.github.io/jquery.canvas.particles/">http://worzt.github.io/jquery.canvas.particles/</a>
+Demo: <a href="http://uribeabraham.github.io/jquery.canvas.particles/">http://uribeabraham.github.io/jquery.canvas.particles/</a>
 
 Getting Started
 =======================

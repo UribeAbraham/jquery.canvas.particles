@@ -8,8 +8,8 @@ $("#rec1").particles({
 	color:{random:true}
 }).click(function(){
 	$(this).particles("stop");
-}).on("stateChange",function(event,state){
-	console.log(state);
+}).on("stateChange.particles",function(event){
+	console.log(event.detail.state);
 });
 
 $("#rec2").particles({
@@ -58,7 +58,7 @@ $("#rec3").particles({
 });	
 
 $("#rec4").click(function(){
-	if(!this.parts){
+	if(!this.particlesData){
 		$(this).particles({
 			amount:10,
 			radius:{radius:10,random:true},
@@ -80,20 +80,20 @@ $("#rec4").click(function(){
 			}
 		});
 	}
-}).on("create",function(){
+}).on("create.particles",function(){
 	console.log("on create rec4");
-}).on("removeParticle",function(){
-	if(this.parts.part.length-1==0){
+}).on("removeParticle.particles",function(){
+	if(this.particlesData.part.length-1==0){
 		$(this).particles("destroy");
 	}
 });
 
 $("#rec5").click(function(){
 	var position={x:$(this).width(),y:$(this).height()};
-	if(this.parts&&this.parts.part.length==0){
+	if(this.particlesData&&this.particlesData.part.length==0){
 		$(this).particles("destroy");
 	}
-	if(!this.parts){
+	if(!this.particlesData){
 		$(this).particles({
 			amount:10,
 			radius:{radius:10,random:true},
@@ -118,14 +118,14 @@ $("#rec5").click(function(){
 			}
 		});
 	}
-}).on("create",function(){
+}).on("create.particles",function(){
 	console.log("created rec5 particles");
-}).on("addParticle",function(event,particle){
+}).on("addParticle.particles",function(event){
 	console.log("created particle on rec5");
 });
 
 $("#rec6").click(function(){
-	if(!this.parts){
+	if(!this.particlesData){
 		$(this).particles({
 			amount:0,
 			radius:{radius:10,random:false},

@@ -405,7 +405,7 @@
 		if(isFunction(data.create)){
 			ele.removeEventListener("create.particles",data.create);
 		}
-		data.removeChild(data.canvas.object);
+		ele.removeChild(data.canvas.object);
 		delete data;
 	}
 }());

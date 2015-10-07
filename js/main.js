@@ -9,7 +9,7 @@ $("#rec0").click(function(){
 		end:$("#end").val(),
 		layout:$("#layout").val(),
 		bound:$("#bound").val(),
-		state:$("#stop").prop('checked'),
+		state:$("#stop").prop('checked')==true?"stopped":"playing",
 		dir:{
 			x:parseInt($("#x").val()),
 			y:parseInt($("#y").val()),
